@@ -18,14 +18,15 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
      //Transform so the cube position is the origin now
      int tx = x - cubePosition.x;
      int ty = y - cubePosition.y;
-     struct coordinate pointPosition;
      //Rotate z axis
-     pointPosition.x = tx*cosz - ty*sinz;
-     pointPosition.y = tx*sinz + ty*cosz;
-     //Rotate x axis
-     pointPosition.y = pointPosition.y*cosx -(radius-pointPosition.y*sinx)*sinxDividedbyCosx;
+     double nx = tx*cosz - ty*sinz;
+     double ny = tx*sinz + ty*cosz;
+     
+     //Find the z value where after the rotation it lands on the screen
+     double tz = (radius-y*sinx)/cosx;
+     ny =ny*cosx -(radius-ny*sinx)*sinxDividedbyCosx;
      struct color pointColor = colors[0];
-     if(fabs(pointPosition.x)<radius+EPS && fabs(pointPosition.y)<radius+EPS)
+     if(fabs(nx)<radius+EPS && fabs(ny)<radius+EPS)
       {
        printf("\033[38;2;%d;%d;%dm@@\033[0m",pointColor.r,pointColor.g,pointColor.b);
       }
