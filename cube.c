@@ -9,9 +9,6 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
 {
    const double cosz = cos(zAngle);
    const double sinz = sin(zAngle);
-   const double cosx = cos(xAngle);
-   const double sinx = sin(xAngle);
-   const double sinxDividedbyCosx = sinx/cosx;
    for(int y =0; y<heightCanvas; y++)
    {
     for(int x = 0; x<widthCanvas; x++){
@@ -21,18 +18,26 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
      //Rotate z axis
      double nx = tx*cosz - ty*sinz;
      double ny = tx*sinz + ty*cosz;
-     
-     //Find the z value where after the rotation it lands on the screen
-     double tz = (radius-y*sinx)/cosx;
-     ny =ny*cosx -(radius-ny*sinx)*sinxDividedbyCosx;
-     struct color pointColor = colors[0];
-     if(fabs(nx)<radius+EPS && fabs(ny)<radius+EPS)
-      {
-       printf("\033[38;2;%d;%d;%dm@@\033[0m",pointColor.r,pointColor.g,pointColor.b);
+     tx=nx;
+     ty=ny;
+     int currentz=-100000;
+     struct color pointColor;
+     bool pointExists;
+     for (int i=1; i<2;i++) {
+       //Find the z value where after the x and y axis rotations it lands on the face
+       double tz = (((radius-ty*sin(i*(M_PI_2) + xAngle))/cos(i*(M_PI_2) + xAngle)));
+       //Rotate x axis according to this z value
+       ny = ty*cos(i*(M_PI_2)+xAngle) -tz*sin(i*(M_PI_2)+xAngle);
+
+       if(fabs(nx)<radius+2*EPS && fabs(ny)<radius+2*EPS)
+        {
+         printf("\033[38;2;%d;%d;%dm@@\033[0m",pointColor.r,pointColor.g,pointColor.b);
+        }
+       else{
+          printf("  ");
+        }
       }
-     else{
-        printf("  ");
-      }
+      
     }
     printf("\n");
    }
