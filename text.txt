@@ -1,0 +1,40 @@
+else{
+          //Top bottom faces
+           //Find the z value where after the x axis rotation it lands on the face
+           double tz2 = (ny*cosx + (1-2*leftface)*radius)/sinx;
+
+           //Find the z value where after the y axis rotation it lands on the prev tz value
+           double sz2 = (((tz2 +nx*siny)/cosy));
+
+           //First rotate this sz by y axis to get to the tz value
+           double newestx2 = nx*cosy + sz2*siny;
+           //sz -->tz
+
+           //Rotate x axis according to this z value
+           double newesty2 = ny*cosx -tz2*sinx;
+           //tz -->radius
+           if(fabs(newestx2)<radius+EPS && fabs(newesty2)<radius+EPS)
+           {
+             pointExists =true;
+             pointColor=colors[3-topface];
+           }
+           else{
+           //Left right faces
+
+           //Find the z value where after the y axis rotation it lands on the prev tz value
+           double tz3 = (radius*(frontface*2 -1) -nx*cosy)/siny;
+
+           //First rotate this sz by y axis to get to the tz value
+           double newestx3 = nx*cosy + tz3*siny;
+           //sz -->tz
+
+           //Rotate x axis according to this z value
+           double newesty3 = ny*cosx -tz3*sinx;
+           //tz -->radius
+           if(fabs(newestx3)<radius+EPS && fabs(newesty3)<radius+EPS)
+           {
+             pointExists =true;
+             pointColor=colors[5-leftface];
+           }
+          }
+          }
