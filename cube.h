@@ -21,7 +21,7 @@ static const struct color topColor = {36, 92, 27}; //Green
 static const struct color bottomColor = { 235, 152, 213 }; //Pink
 static const struct color leftColor = { 24, 159, 163 }; //Cyan
 static const struct color rightColor= { 199, 81, 22 }; //Orange
-static const struct color headerColors[6] = {frontColor,bottomColor,backColor,topColor,rightColor,leftColor};
+static const struct color headerColors[6] = {frontColor,backColor,topColor,bottomColor,leftColor,rightColor};
 
 static const struct coordinate middle = {heightCanvas/2,widthCanvas/2};
 static const struct coordinate origin = {0,0};
