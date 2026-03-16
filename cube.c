@@ -67,7 +67,7 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
 
            //Top bottom faces
            //Find the z value where after the x axis rotation it lands on the face
-           tz = (radius*(1-2*topface)+ny*cosx)/sinx;
+           tz = (radius*(2*topface -1)+ny*cosx)/sinx;
 
            //Find the z value where after the y axis rotation it lands on the prev tz value
            sz = (((tz +nx*siny)/cosy));
@@ -88,7 +88,32 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
            if(fabs(newestx)<radius+EPS && fabs(newesty)<radius+EPS)
            {
              pointExists =true;
-             pointColor=colors[5-topface];
+             pointColor=colors[3-topface];
+           }
+           else{
+            //Left right faces
+            //Find the z value where after the y axis rotation it lands on the face
+
+            //(x axis rotation won't change the x value)
+            tz =  (radius*(2*leftface -1) - cosy*nx)/siny;
+
+            //First rotate this tz by y axis
+            double newerx = nx*cosy + tz*siny;
+            tz = -siny*nx + tz*cosy;
+
+            //Rotate x axis
+            newesty = ny*cosx -tz*sinx;
+            tz = ny*sinx + tz*cosx;
+
+            //Rotate y axis by 90 degrees
+            //y stays the same after y axis rotation
+            newestx = (1 - 2*topface)*tz;
+            // z must become the radius if we did the math right
+            if(fabs(newestx)<radius+EPS && fabs(newesty)<radius+EPS)
+           {
+             pointExists =true;
+             pointColor=colors[5-leftface];
+           }
            }
            }
           if(pointExists)
@@ -110,7 +135,7 @@ void rotatingCube(const struct coordinate cubePosition, const int radius, const 
     struct timespec remaining, request = { 0, 200000000 };
     int i = 0;
     while(1){
-      printCube(cubePosition, radius, M_PI_4, 0,(i*M_PI/16), colors);
+      printCube(cubePosition, radius, i*M_PI/16, M_PI_2,0, colors);
       nanosleep(&request, &remaining);
       printf("\x1b[H\x1b[J");
       i = (i+ 1 )%33;
