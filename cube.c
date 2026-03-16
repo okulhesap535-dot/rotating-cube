@@ -50,11 +50,11 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
            //Find the z value where after the y axis rotation it lands on the prev tz value
            double sz = (((tz +nx*siny)/cosy));
 
-           //First rotate this sz by y axis to get to the tz value
+           //First rotate this sz by y axis
            double newestx = nx*cosy + sz*siny;
            //sz -->tz
 
-           //Rotate x axis according to this z value
+           //Rotate x axis
            double newesty = ny*cosx -tz*sinx;
            //tz -->radius
            if(fabs(newestx)<radius+EPS && fabs(newesty)<radius+EPS)
@@ -64,21 +64,31 @@ int printCube(const struct coordinate cubePosition, const int radius, const doub
            }
            //If not move on to the next faces
            else{
-            //left right faces
-           //Find the z value where after the x and y axis rotations it lands on the face
-           double tz3 = (nx*cosy+ny*sinx*siny +(1-2*leftface)*radius)/cosx*siny;
 
-           //First rotate this sz by y axis to get to the tz value
-           newestx = nx*cosy + tz3*siny;
-           double nz = tz3;
+           //Top bottom faces
+           //Find the z value where after the x axis rotation it lands on the face
+           tz = (radius*(1-2*topface)+ny*cosx)/sinx;
 
-           //Rotate x axis according to this z value
-           newesty = ny*cosx -nz*sinx;
-           //tz -->radius
+           //Find the z value where after the y axis rotation it lands on the prev tz value
+           sz = (((tz +nx*siny)/cosy));
+
+           //First rotate this sz by y axis
+           newestx = nx*cosy + sz*siny;
+           //sz -->tz
+
+           //Rotate x axis
+           double newery = ny*cosx -tz*sinx;
+           tz = ny*sinx + tz*cosx;
+
+           //Rotate x axis by 90 degrees
+           //x stays the same after x axis rotation
+           newesty = (2*topface -1)*tz;
+           // z must become the radius if we did the math right
+
            if(fabs(newestx)<radius+EPS && fabs(newesty)<radius+EPS)
            {
              pointExists =true;
-             pointColor=colors[5-leftface];
+             pointColor=colors[5-topface];
            }
            }
           if(pointExists)
@@ -100,7 +110,7 @@ void rotatingCube(const struct coordinate cubePosition, const int radius, const 
     struct timespec remaining, request = { 0, 200000000 };
     int i = 0;
     while(1){
-      printCube(cubePosition, radius, 0, (i*M_PI/16),0, colors);
+      printCube(cubePosition, radius, M_PI_4, 0,(i*M_PI/16), colors);
       nanosleep(&request, &remaining);
       printf("\x1b[H\x1b[J");
       i = (i+ 1 )%33;
